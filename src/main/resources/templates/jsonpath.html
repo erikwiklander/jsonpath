@@ -4,18 +4,26 @@
     <meta charset="UTF-8">
     <title>JSONPath</title>
     <style>
+        textarea {
+             width: 40%;
+             padding: 5px;
+        }
 
+        div {
+            width: 100%;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
     <form action="#" th:action="@{/}" method="post" th:object="${userInput}">
         <div>
-            <input type="text" th:field="*{jsonPath}" alt="Insert JSONPath Expression" />
+            <input type="text" th:field="*{jsonPath}" alt="Insert JSONPath Expression" style="width:60%"/>
             <input type="submit" name="Do it!">
         </div>
         <div>
-            <textarea rows="40" cols="50" th:field="*{inputJson}"></textarea>
-            <textarea rows="40" cols="50" th:field="*{outputJson}"></textarea>
+            <textarea rows="40" th:field="*{inputJson}"></textarea>
+            <textarea rows="40" th:field="*{outputJson}"></textarea>
         </div>
 
     </form>
