@@ -3,9 +3,9 @@ package io.wiklandia.jsonpath;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.thymeleaf.util.StringUtils;
 
 @Slf4j
 @Controller
@@ -16,14 +16,22 @@ public class JsonPathController {
     private final JsonPathEvaluator jsonPathEvaluator;
 
     @RequestMapping(path = "/")
-    public String jsonPath(Model model, @ModelAttribute UserInput userInput) {
-        try {
-            userInput.setInputJson(prettyfier.prettify(userInput.getInputJson()));
-            userInput.setOutputJson(prettyfier.prettify(jsonPathEvaluator.evaluate(userInput.getInputJson(), userInput.getJsonPath())));
-        } catch (Exception e) {
-            log.error("e", e);
+    public String jsonPath(@ModelAttribute UserInput userInput) {
+        String template = "jsonpath";
+        String inputJson = userInput.getInputJson();
+        String jsonPath = userInput.getJsonPath();
+        if (StringUtils.isEmpty(inputJson) || StringUtils.isEmpty(jsonPath)) {
+            return template;
         }
-        return "jsonpath";
+        try {
+            userInput.setInputJson(prettyfier.prettify(inputJson));
+            userInput.setOutputJson(prettyfier.prettify(jsonPathEvaluator.evaluate(inputJson, jsonPath)));
+        } catch (Exception e) {
+            userInput.setOutputJson("");
+            userInput.setErrorMessage(e.getMessage());
+            log.error("Error", e);
+        }
+        return template;
     }
 
 }
